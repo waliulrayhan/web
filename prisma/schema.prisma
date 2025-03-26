@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ScreeningSession {
+  id              String   @id @default(cuid())
+  jobTitle        String
+  jobDescription  String   // File path
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  candidates      Candidate[]
+}
+
+model Candidate {
+  id                String           @id @default(cuid())
+  cvFile           String           // File path
+  matchScore       Float?
+  screeningSession ScreeningSession @relation(fields: [sessionId], references: [id])
+  sessionId        String
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
